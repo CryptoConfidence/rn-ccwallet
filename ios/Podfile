@@ -79,6 +79,10 @@ target 'CCWallet' do
 
   pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
 
+  pod 'RNReanimated', :path => '../node_modules/react-native-reanimated'
+
+  pod 'RNGestureHandler', :path => '../node_modules/react-native-gesture-handler'
+
   target 'CCWalletTests' do
     inherit! :complete
     # Pods for testing
