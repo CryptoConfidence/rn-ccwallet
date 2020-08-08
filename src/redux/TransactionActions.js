@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 // action types
 export const ADD_TXN_PREPARE = 'ADD_TXN_PREPARE'
@@ -19,17 +19,6 @@ export const setPreparedTxn = (preparedTxn) => async (dispatch) => {
   dispatch({ type: ADD_TXN_PREPARE_SENT })
   try {
     console.log('Action setPreparedTxn')
-
-    // TODO persist the accounts to the db (could be useful later)
-    //const response = await CCApi.post('addaccount', { address })
-    
-    // TODO persist accounts to local storage
-    //var existingAccounts = await AsyncStorage.getItem('accounts')
-    //if (existingAccounts === null) {
-    //  existingAccounts = []
-    //}
-    //const newAccountList = existingAccounts.push(newAccount)
-    //await AsyncStorage.setItem('accounts', newAccountList)
 
     dispatch({ type: ADD_TXN_PREPARE, payload: preparedTxn })
     console.log('Prepared Txn added successfully')

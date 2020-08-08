@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 
 // action types
 export const ADD_PAYMENT = 'ADD_PAYMENT'

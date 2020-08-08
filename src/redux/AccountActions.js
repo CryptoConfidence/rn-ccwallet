@@ -1,4 +1,4 @@
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
 import RippleApi from '../connections/api/RippleAPI';
 import { accountSubscribe } from '../subscribers/AccountSubscribers';
 
@@ -13,9 +13,24 @@ export const ADD_ACCOUNT_ERROR = 'ADD_ACCOUNT_ERROR'
 export const REMOVE_ACCOUNT_ERROR = 'REMOVE_ACCOUNT_ERROR'
 export const BALANCE_UPDATE_ERROR = 'BALANCE_UPDATE_ERROR'
  
-
-
 var counter = 0;
+
+export const tryReloadLocalAccounts = () => async (dispatch) => {
+  try {
+    const localAccountsString = await AsyncStorage.getItem('accounts')
+    const localAccounts = JSON.parse(localAccountsString)
+    if (localAccounts) {
+      localAccounts.forEach((account) => {
+        console.log('Adding account to store:', account)
+        dispatch({ type: ADD_ACCOUNT, payload: account })
+      })
+    } else {
+      console.log('No local accounts available')
+    }
+  } catch (error) {
+    console.log('Error loading accounts from storage:', error)
+  }
+}
 
 // action creators
 export const addAccount = () => async (dispatch) => {
@@ -23,25 +38,29 @@ export const addAccount = () => async (dispatch) => {
   dispatch({ type: ADD_ACCOUNT_SENT })
   try {
     console.log('Add account triggered')
-    const credentials = RippleApi.generateAddress()
-    accountSubscribe(credentials.address);
-    console.log('Credentials generated', credentials)
+    var account = RippleApi.generateAddress()
+    accountSubscribe(account.address);
+    console.log('Credentials generated', account)
     
     // Just supply a dummy name for now (until I allow the user to set / edit it)
-    credentials.name = `XRP Account ${counter}`;
-    credentials.currency = 'XRP';
-    credentials.balance = 0.000000;
+    account.name = `XRP Account ${counter}`;
+    account.currency = 'XRP';
+    account.balance = 0.000000;
+
     // TODO persist the accounts to the db (could be useful later)
     //const response = await CCApi.post('addaccount', { address })
     
-    // TODO persist accounts to local storage
-    //var existingAccounts = await AsyncStorage.getItem('accounts')
-    //if (existingAccounts === null) {
-    //  existingAccounts = []
-    //}
-    //const newAccountList = existingAccounts.push(newAccount)
-    //await AsyncStorage.setItem('accounts', newAccountList)
-    dispatch({ type: ADD_ACCOUNT, payload: credentials })
+    const existingAccountsString = await AsyncStorage.getItem('accounts')
+    var existingAccounts = JSON.parse(existingAccountsString)
+    
+    if (existingAccounts === null) {
+      existingAccounts = []
+    }
+    existingAccounts.push(account)
+    const newAccountsString = JSON.stringify(existingAccounts)
+    
+    await AsyncStorage.setItem('accounts', newAccountsString)
+    dispatch({ type: ADD_ACCOUNT, payload: account })
     
     console.log('New account added successfully')
   } catch (error) {
@@ -57,10 +76,16 @@ export const removeAccount = ({ xAddress }) => async (dispatch) => {
     // TODO remove the accounts to the db (could be useful later)
     //const response = await CCApi.post('disableAccount', { xAddress })
     
-    // TODO remove accounts to local storage
-    //var existingAccounts = await AsyncStorage.getItem('accounts')
-    // filter existing accounts
-    //await AsyncStorage.setItem('accounts', newAccountList)
+    // Hack to remove all accounts from storage (if I break it during testing)
+    //await AsyncStorage.removeItem('accounts')
+    
+    const existingAccountsString = await AsyncStorage.getItem('accounts')
+    const existingAccounts = JSON.parse(existingAccountsString)
+    
+    const newAccountList = existingAccounts.filter(account => account.xAddress !== xAddress )
+    const newAccountListString = JSON.stringify(newAccountList)
+    
+    await AsyncStorage.setItem('accounts', newAccountListString)
     dispatch({ type: REMOVE_ACCOUNT, payload: xAddress })
     
     console.log('New account added successfully')
@@ -72,8 +97,20 @@ export const removeAccount = ({ xAddress }) => async (dispatch) => {
 export const updateBalance = ({ address, newBalance }) => async (dispatch) => {
   dispatch({ type: BALANCE_UPDATE_SENT })
   try {
-    // Do not need the try catch here but may use it later for async storage
-    console.log('Updating Balance of:', address, ' to:', newBalance )
+    console.log('Updating Balance of:', address, ' to:', newBalance)
+    
+    const existingAccountsString = await AsyncStorage.getItem('accounts')
+    var existingAccounts = JSON.parse(existingAccountsString)
+    
+    existingAccounts.forEach(item => {
+      if (item.address === address) {
+        item.balance = newBalance;
+      }
+    })
+    console.log('Existing Accounts', existingAccounts) 
+    const newAccountListString = JSON.stringify(existingAccounts)
+    
+    await AsyncStorage.setItem('accounts', newAccountListString)  
     dispatch({ type: BALANCE_UPDATE, payload: { address, balance: newBalance } })
     
     console.log('Balance updated successfully')

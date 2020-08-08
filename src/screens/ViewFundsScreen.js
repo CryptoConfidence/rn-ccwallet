@@ -10,7 +10,7 @@ const ViewFundsScreen = ({ navigation, accounts }) => {
     <View style={styles.container}>
       <Header menuAction={() => navigation.toggleDrawer()} />   
       <View style={styles.swipecontainer}>
-        <SwipeView accounts={accounts} />
+        <SwipeView  accounts={accounts} />
       </View>
     </View>
   )
@@ -19,15 +19,18 @@ const ViewFundsScreen = ({ navigation, accounts }) => {
 const styles = StyleSheet.create({
   container: {
     flexDirection: 'column',
+    backgroundColor: '#EBF1F3',
     flex: 1,
   }, 
   swipecontainer: {
     paddingHorizontal: '5%',
     paddingTop: 10,
     width: '100%',
-    height: '50%',
+    height: '45%',
+    borderRadius: 30,
   },
   swipeview: {
+    
   }
 })
 

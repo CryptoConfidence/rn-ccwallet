@@ -17,7 +17,8 @@ const ScanBarcodeScreen = ({ navigation, addPaymentDetails }) => {
             buttonNegative: 'Cancel',
           }}
           onGoogleVisionBarcodesDetected={({ barcodes }) => {
-            barcodes.forEach(item =>{
+            barcodes.forEach(item => {
+              console.log('Barcode identified')
               if (item.type === 'QR_CODE') {
                 console.log('Identified QRCODE', item.data)
                 addPaymentDetails(item.data);
@@ -32,7 +33,8 @@ const ScanBarcodeScreen = ({ navigation, addPaymentDetails }) => {
 
 const styles = StyleSheet.create({
   container: {
-
+    flex: 1,
+    backgroundColor: '#EBF1F3' 
   },
   camera: {
     height: '90%',

@@ -42,7 +42,10 @@ const AccountManagementScreen = ({ navigation, addAccount, accounts, removeAccou
         />
       </View>
 
-      <Button title='Create Account' onPress={() => addAccount()} />
+      <View style={styles.button}>
+        <Button title='Create Account' onPress={() => addAccount()} />
+      </View> 
+      
     </View>
   )
 }
@@ -50,7 +53,8 @@ const AccountManagementScreen = ({ navigation, addAccount, accounts, removeAccou
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    backgroundColor: '#EBF1F3' 
   },
   mainview_container: {
     flex: 2
@@ -84,8 +88,9 @@ const styles = StyleSheet.create({
   remove: {
     fontSize: 24
   },
-  //button_container: {
-  //}
+  button: {
+    paddingBottom: 10
+  }
 })
 
 function mapStateToProps(state) {

@@ -4,7 +4,7 @@ import Header from '../components/Header';
 
 const DisputeManagementScreen = ({ navigation }) => {
   return (
-    <View>
+    <View style={styles.container}>
       <Header menuAction={() => navigation.toggleDrawer()} />
       <Text> DisputeManagementScreen </Text>
     </View>
@@ -12,7 +12,10 @@ const DisputeManagementScreen = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-
+  container: {
+    flex: 1,
+    backgroundColor: '#EBF1F3' 
+  },
 })
 
 export default DisputeManagementScreen;

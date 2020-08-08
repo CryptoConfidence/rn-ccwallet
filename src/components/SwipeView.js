@@ -39,12 +39,14 @@ const SwipeView = ({ accounts }) => {
 }
 
 const styles = StyleSheet.create ({
-  wrapper: {},
+  wrapper: {
+  },
   slide: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#9DD6EB'
+    backgroundColor: '#9DD6EB',
+    //borderRadius: 15,
   },
   currency: {
     color: '#fff',

@@ -4,13 +4,19 @@ import XRPReducer from './XRPReducer';
 import AccountReducer from './AccountReducer';
 import PaymentReducer from './PaymentReduer';
 import TransactionReducer from './TransactionReducer';
+import EscrowCreateReducer from './EscrowCreateReducer';
+import EscrowFinishReducer from './EscrowFinishReducer';
+import PriceReducer from './PriceReducer';
 
 const combinedReducer = combineReducers({
   auth: AuthReducer,
   xrp: XRPReducer,
   account: AccountReducer,
   payment: PaymentReducer,
+  price: PriceReducer,
   transaction: TransactionReducer,
+  escrow_create: EscrowCreateReducer,
+  escrow_finish: EscrowFinishReducer
 })
 
 export default combinedReducer;

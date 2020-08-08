@@ -4,19 +4,21 @@ import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { Dropdown } from 'react-native-material-dropdown-v2';
 import { sendBasicXrpPayment } from '../ledger/BasicPayment';
+import { sendEscrowXrpPayment } from '../ledger/EscrowPayment';
 
-const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectionStatus } ) => {
+const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectionStatus, price } ) => {
   
   const [accountSelected, setAccountSelected] = useState('');
 
   //const xrpAmount = paymentDetails.Amount / 0.2007;
-  const xrpAmount = 15;  // Override XRP amount for testing purposes
-    const accountNames = accounts.map(account => {
+  const xrpAmount = paymentDetails.Amount / price / 100;
+  //const xrpAmount = 15;  // Override XRP amount for testing purposes
+  const accountNames = accounts.map(account => {
     if (account) {
       return { 
         value: account.xAddress,
-        label: `${account.name}      ${account.balance} XRP`   
-      }
+        label: `${account.name}      ${account.balance} XRP`  
+      } 
     } else {
       return null
     }  
@@ -51,6 +53,7 @@ const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectio
           </View>
 
           <Text> USD Amount: ${paymentDetails.Amount} </Text>
+          <Text> XRP Price: ${price} </Text>
           <Text> XRP Amount: {xrpAmount.toFixed(4)} XRP </Text>
         </View>
       
@@ -94,8 +97,14 @@ const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectio
         }
 
         <View style={styles.buttons}>
-          <Button title='Make Secure Payment' onPress={() => {console.log('Secure Payment')}} /> 
-          <Button color='black' title='Make Regular Payment' onPress={() => {sendBasicXrpPayment(accountSelected, 'XVGHtEc89Y5MZ9TKioCNB7hDDxdpQ1VJDnmT8qCajKZsYGi', xrpAmount) }} /> 
+          <Button title='Make Secure Payment' onPress={() => {
+            sendEscrowXrpPayment(accountSelected, paymentDetails.Address, xrpAmount.toFixed(6), paymentDetails.Condition)
+            navigation.navigate('Tracker')
+          }} /> 
+          <Button color='black' title='Make Regular Payment' onPress={() => {
+            sendBasicXrpPayment(accountSelected, paymentDetails.Address, xrpAmount.toFixed(6))
+            navigation.navigate('Tracker')
+          }} /> 
         </View>
       </View>
       
@@ -104,10 +113,12 @@ const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectio
   )
 }
 
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'space-between'
+    justifyContent: 'space-between',
+    backgroundColor: '#EBF1F3' 
   },
   main: {
 
@@ -182,7 +193,8 @@ function mapStateToProps(state) {
   return {
     paymentDetails: state.payment.paymentDetails,
     accounts: state.account.accountList,
-    connectionStatus: state.xrp.isConnected
+    connectionStatus: state.xrp.isConnected,
+    price: state.price.price
   }
 }
 

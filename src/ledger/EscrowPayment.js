@@ -1,6 +1,6 @@
 import RippleApi from '../connections/api/RippleAPI';
 import { store } from '../redux/store';
-import { setPreparedTxn, setSignedTxn, setTxnResult } from '../redux/TransactionActions';
+import { setPreparedTxn, setSignedTxn, setTxnResult } from '../redux/EscrowCreateActions';
 
 
 const prepareEscrowCreate = async (senderAddress, receiverAddress, amount, cryptoCondition) => {
@@ -9,7 +9,7 @@ const prepareEscrowCreate = async (senderAddress, receiverAddress, amount, crypt
   console.log("TimeNow", datetimenow);
   const cancelAfter =
     //Math.floor(Date.now() / 1000) + 24 * 60 * 60 - rippleOffset; // +1 day (Auto roll back)
-    Math.floor(Date.now() / 1000) + 5 * 60 - rippleOffset; // +5 minutes (Auto roll back)
+    Math.floor(Date.now() / 1000) + 20 * 60 - rippleOffset; // +5 minutes (Auto roll back)
   const finishAfter = Math.floor(Date.now() / 1000) + 5 - rippleOffset; // +5 seconds (Cannot complete before)
   console.log("Cancel After", cancelAfter);
   console.log("Finish After", finishAfter);
@@ -26,10 +26,12 @@ const prepareEscrowCreate = async (senderAddress, receiverAddress, amount, crypt
     //"SourceTag": 11747,
     //Fee: 20,
   });
-  state.dispatch(setPreparedTxn(preparedTx)); // Update Store
+  console.log('PreparedTxn:', preparedTx)
+  store.dispatch(setPreparedTxn(preparedTx)); // Update Store
   console.log("Prepared transaction instructions:", preparedTx.txJSON);
 
-  sequence = JSON.parse(preparedTx.txJSON).Sequence;
+  
+  const sequence = JSON.parse(preparedTx.txJSON).Sequence;
   console.log("Offer transaction sequence number:", sequence);
 
   return preparedTx.txJSON;
@@ -40,7 +42,7 @@ const signCreateTransaction = async (txJSON, secret) => {
   const response = RippleApi.sign(txJSON, secret);
   store.dispatch(setSignedTxn(response));  // Update Store
 
-  txCreateID = response.id;
+  const txCreateID = response.id;
   console.log("Identifying Create hash:", txCreateID);
   const txBlob = response.signedTransaction;
   console.log("Signed blob:", txBlob);
@@ -53,7 +55,7 @@ const submitTransaction = async (txBlob) => {
   const result = await RippleApi.submit(txBlob);
   store.dispatch(setTxnResult(result));  // Update Store
 
-  earliestLedgerVersion = latestLedgerVersion + 1;
+  const earliestLedgerVersion = latestLedgerVersion + 1;
   console.log("Earliest ledger version", earliestLedgerVersion);
   console.log("Tentative Result:", JSON.stringify(result));
 
@@ -61,7 +63,11 @@ const submitTransaction = async (txBlob) => {
 }
 
 
-export const escrowCreate = async (account, destinationAddress, amount, condition) => {
+export const sendEscrowXrpPayment = async (account, destinationAddress, amount, condition) => {
+  console.log('Account:', account)
+  console.log('DestinationAddress:', destinationAddress)
+  console.log('Amount:', amount)
+  console.log('Condition:', condition)
   const txJSON_Create = await prepareEscrowCreate(account.xAddress, destinationAddress, amount, condition);
   const txBlob_Create = await signCreateTransaction(txJSON_Create, account.secret);
   await submitTransaction(txBlob_Create);

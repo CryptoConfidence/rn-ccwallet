@@ -1,5 +1,5 @@
 import CCApi from '../connections/api/CCAPI';
-import { AsyncStorage } from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage'; 
 import { navigate } from '../utils/navigationRef';
 
 // action types

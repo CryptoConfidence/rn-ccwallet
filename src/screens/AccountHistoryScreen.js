@@ -4,7 +4,7 @@ import Header from '../components/Header';
 
 const AccountHistoryScreen = ({ navigation }) => {
   return (
-    <View>
+    <View style={styles.container}>
       <Header menuAction={() => navigation.toggleDrawer()} />
       <Text> AccountHistoryScreen </Text>
     </View>
@@ -12,7 +12,10 @@ const AccountHistoryScreen = ({ navigation }) => {
 }
 
 const styles = StyleSheet.create({
-
+  container: {
+    flex: 1,
+    backgroundColor: '#EBF1F3' 
+  },
 })
 
 export default AccountHistoryScreen;

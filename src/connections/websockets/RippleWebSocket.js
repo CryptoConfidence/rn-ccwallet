@@ -1,4 +1,7 @@
-import { AccountHandler } from '../../eventhandlers/AccountHandler';
+import { TransactionHandler } from '../../eventhandlers/TransactionHandler';
+import { GenericResponseHandler } from '../../eventhandlers/GenericResponseHandler';
+import WSOpenConnectionHandler from '../../eventhandlers/WSOpenConnectionHandler';
+import WSCloseConnectionHandler from '../../eventhandlers/WSCloseConnectionHandler';
 
 var socket = null;
 
@@ -17,7 +20,8 @@ const handleResponse = function (data) {
 
 const WS_HANDLERS = {
   response: handleResponse,
-  ["transaction"]: AccountHandler,
+  ["transaction"]: TransactionHandler,
+  ["response"]: GenericResponseHandler,
   // Fill this out with your handlers in the following format:
   // "type": function(event) { /* handle event of this type */ }
 };
@@ -25,7 +29,7 @@ const WS_HANDLERS = {
 export const websocketConnect = () => {
   socket = new WebSocket("wss://s.altnet.rippletest.net:51233");
   socket.addEventListener("open", (event) => {
-    console.log("WebSocket Connected!");
+    WSOpenConnectionHandler(event)
   });
   socket.addEventListener("message", (event) => {
     const parsed_data = JSON.parse(event.data);
@@ -37,11 +41,7 @@ export const websocketConnect = () => {
     }
   });
   socket.addEventListener("close", (event) => {
-    if (code !== 1000) {
-      console.log('Connection was closed due to error.', event.data);
-    } else {
-      console.log('Connection was closed normally.');
-    }
+    WSCloseConnectionHandler(event)
   });
 } 
 
