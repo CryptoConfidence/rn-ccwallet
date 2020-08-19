@@ -15,7 +15,8 @@ export const BALANCE_UPDATE_ERROR = 'BALANCE_UPDATE_ERROR'
  
 var counter = 0;
 
-export const tryReloadLocalAccounts = () => async (dispatch) => {
+export const reloadLocalAccounts = () => async (dispatch) => {
+  console.log('Reloading Local Accounts')
   try {
     const localAccountsString = await AsyncStorage.getItem('accounts')
     const localAccounts = JSON.parse(localAccountsString)

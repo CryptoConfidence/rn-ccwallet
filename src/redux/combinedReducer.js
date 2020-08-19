@@ -7,6 +7,7 @@ import TransactionReducer from './TransactionReducer';
 import EscrowCreateReducer from './EscrowCreateReducer';
 import EscrowFinishReducer from './EscrowFinishReducer';
 import PriceReducer from './PriceReducer';
+import HistoricTransactionReducer from './HistoricTransactionReducer';
 
 const combinedReducer = combineReducers({
   auth: AuthReducer,
@@ -16,7 +17,8 @@ const combinedReducer = combineReducers({
   price: PriceReducer,
   transaction: TransactionReducer,
   escrow_create: EscrowCreateReducer,
-  escrow_finish: EscrowFinishReducer
+  escrow_finish: EscrowFinishReducer,
+  history: HistoricTransactionReducer
 })
 
 export default combinedReducer;

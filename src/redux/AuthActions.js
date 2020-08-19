@@ -35,7 +35,7 @@ export const signup = ({ email, password }) => async (dispatch) => {
     const response = await CCApi.post('signup', { email, password })
     await AsyncStorage.setItem('token', response.data.token)
     dispatch({ type: SIGN_IN, payload: response.data.token })
-    navigate('ViewFunds')
+    navigate('Loading')
     console.log('Signed up successfully')
   } catch (error) {
     dispatch({ type: ADD_ERROR, payload: 'Something went wrong with sign up:', error })
@@ -50,7 +50,7 @@ export const signin = ({ email, password }) => async (dispatch) => {
     const response = await CCApi.post('/signin', { email, password })
     await AsyncStorage.setItem('token', response.data.token)
     dispatch({ type: SIGN_IN, payload: response.data.token })
-    navigate('ViewFunds')
+    navigate('Loading')
     console.log('Signed in successfully')
   } catch (error) {
     dispatch({ type: ADD_ERROR, payload: 'Something went wrong with sign in:', error })

@@ -26,12 +26,13 @@ const renderSlides = (accounts) => {
   );
 }
 
-const SwipeView = ({ accounts }) => {
+const SwipeView = ({ accounts, setActiveAccount }) => {
   return (
     <Swiper
       key={accounts.address} 
       style={styles.wrapper} 
       showsButtons={true}
+      onIndexChanged={(index) => (setActiveAccount(accounts[index]))}
     >
       {renderSlides(accounts)}
     </Swiper>

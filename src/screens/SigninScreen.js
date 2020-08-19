@@ -9,7 +9,7 @@ import NavLink from '../components/NavLink';
 import PayWithCC from '../components/PayWithCC';
 
 import { signin, clearErrorMessage } from '../redux/AuthActions';
-import { ledgerConnect } from '../redux/XRPActions';
+
 
 
 const SigninScreen =  ( { errorMessage, signin, clearErrorMessage, ledgerConnect } ) => {
@@ -25,7 +25,6 @@ const SigninScreen =  ( { errorMessage, signin, clearErrorMessage, ledgerConnect
         errorMessage={errorMessage}
         submitButtonText="Sign In"
         onSubmit={({ email, password }) => {
-          ledgerConnect()
           signin({ email, password })
         }}
       />
@@ -61,10 +60,5 @@ function mapStateToProps(state) {
   }
 }
 
-//function mapDispatchToProps(dispatch) {
-//  return {
-//    signin: () => dispatch(signin())
-//  }
-//}
 
-export default connect(mapStateToProps, { signin, clearErrorMessage, ledgerConnect } )(SigninScreen);
+export default connect(mapStateToProps, { signin, clearErrorMessage } )(SigninScreen);
