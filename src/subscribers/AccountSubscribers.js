@@ -25,7 +25,8 @@ export const account_HistRequest = async (account) => {
     ledger_index_min: -1,
     ledger_index_max: -1,
     binary: false,
-    limit: 5,
+    limit: 50,
+    //limit: 5,
     forward: false  
   });
   if (sub_response.status === 'success') {

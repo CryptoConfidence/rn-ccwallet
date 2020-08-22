@@ -31,6 +31,19 @@ const ViewFundsScreen = ({ navigation, accounts, transactions }) => {
     return transactions.filter(transaction => filterTransactionsByAccount(transaction))
   }
 
+  const renderPaymentStatus = (item) => {
+    //console.log('Item:', item)
+    if (item.hasOwnProperty('FinishDetails')) {
+      if (item.FinishDetails.TransactionType === 'EscrowFinish') {
+        return <Text style={styles.transaction_type}>Secure Payment - Complete </Text>
+      } else {
+        return <Text style={styles.transaction_type}>Secure Payment - Rejected </Text>
+      }
+    } else {
+      return <Text style={styles.transaction_type}>Secure Payment - Pending </Text>
+    }  
+  }
+
   useEffect(() => {
     transactions.sort(transactionCompare)
   }, [])
@@ -59,7 +72,7 @@ const ViewFundsScreen = ({ navigation, accounts, transactions }) => {
                   { item.transactionDetails.TransactionType === 'Payment' ?
                     <Text style={styles.transaction_type}>Regular Payment </Text>
                     :
-                    <Text style={styles.transaction_type}>Secure Payment </Text>
+                    renderPaymentStatus(item)
                   }
                   { activeAccount.address === item.transactionDetails.Account ? 
                     <Text style={styles.counterpart}>Receiver: {item.transactionDetails.Destination}</Text>

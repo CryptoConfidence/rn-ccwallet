@@ -6,12 +6,15 @@ import { Dropdown } from 'react-native-material-dropdown-v2';
 import { sendBasicXrpPayment } from '../ledger/BasicPayment';
 import { sendEscrowXrpPayment } from '../ledger/EscrowPayment';
 
-const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectionStatus, price } ) => {
+//const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectionStatus, price } ) => {
+const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectionStatus } ) => {
   
   const [accountSelected, setAccountSelected] = useState('');
 
-  //const xrpAmount = paymentDetails.Amount / 0.2007;
-  const xrpAmount = paymentDetails.Amount / price / 100;
+  const price = 0.2804
+  const xrpAmount = paymentDetails.Amount / price;
+   
+  //const xrpAmount = paymentDetails.Amount / price / 100;
   //const xrpAmount = 15;  // Override XRP amount for testing purposes
   const accountNames = accounts.map(account => {
     if (account) {
