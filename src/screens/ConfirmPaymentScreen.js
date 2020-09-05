@@ -2,25 +2,25 @@ import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { Dropdown } from 'react-native-material-dropdown-v2';
+//import { Dropdown } from 'react-native-material-dropdown-v2';
+import RNPickerSelect from 'react-native-picker-select';
 import { sendBasicXrpPayment } from '../ledger/BasicPayment';
 import { sendEscrowXrpPayment } from '../ledger/EscrowPayment';
 
-//const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectionStatus, price } ) => {
-const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectionStatus } ) => {
+const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectionStatus, price } ) => {
+//const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectionStatus } ) => {
   
   const [accountSelected, setAccountSelected] = useState('');
 
-  const price = 0.2804
-  const xrpAmount = paymentDetails.Amount / price;
-   
-  //const xrpAmount = paymentDetails.Amount / price / 100;
+  //const price = 0.2804
+  const xrpAmount = paymentDetails.Amount / price / 100;
   //const xrpAmount = 15;  // Override XRP amount for testing purposes
   const accountNames = accounts.map(account => {
     if (account) {
       return { 
+        label: `${account.name}      ${account.balance} XRP`, 
         value: account.xAddress,
-        label: `${account.name}      ${account.balance} XRP`  
+        key: account.xAddress 
       } 
     } else {
       return null
@@ -60,16 +60,16 @@ const ConfirmPaymentScreen = ( { navigation, paymentDetails, accounts, connectio
           <Text> XRP Amount: {xrpAmount.toFixed(4)} XRP </Text>
         </View>
       
-
         <View style={styles.dropdown_container}>
-          <Dropdown
+          <RNPickerSelect
             style={styles.dropdown}
-            label='Select Account'
-            fontSize={12}
-            labelFontSize={10}
-            animationDuration={50}
-            data={accountNames}
-            onChangeText={(text) => {mapAddressToAccount(text)}}
+            //label='Select Account'
+            //fontSize={12}
+            //labelFontSize={10}
+            //animationDuration={50}
+            placeholder={{ label: 'Select an Account...' }}
+            items={accountNames}
+            onValueChange={(text) => {mapAddressToAccount(text)}}
           />
         </View>
         

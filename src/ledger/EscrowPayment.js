@@ -7,10 +7,9 @@ const prepareEscrowCreate = async (senderAddress, receiverAddress, amount, crypt
   const rippleOffset = 946684800; //Ripple Epoch (2000-01-01T00:00:00Z).
   const datetimenow = Date.now();
   console.log("TimeNow", datetimenow);
-  const cancelAfter =
-    //Math.floor(Date.now() / 1000) + 24 * 60 * 60 - rippleOffset; // +1 day (Auto roll back)
-    Math.floor(Date.now() / 1000) + 20 * 60 - rippleOffset; // +5 minutes (Auto roll back)
-  const finishAfter = Math.floor(Date.now() / 1000) + 5 - rippleOffset; // +5 seconds (Cannot complete before)
+  console.log("Rippletime", datetimenow / 1000 - rippleOffset)
+  const cancelAfter = Math.floor(datetimenow / 1000) + 5 * 60 - rippleOffset; // +5 minutes (Auto roll back)
+  const finishAfter = Math.floor(datetimenow / 1000) + 3 - rippleOffset; // Current time + 3 second (Cannot complete before)
   console.log("Cancel After", cancelAfter);
   console.log("Finish After", finishAfter);
 
@@ -62,6 +61,10 @@ const submitTransaction = async (txBlob) => {
   return;
 }
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
 
 export const sendEscrowXrpPayment = async (account, destinationAddress, amount, condition) => {
   console.log('Account:', account)
@@ -71,4 +74,14 @@ export const sendEscrowXrpPayment = async (account, destinationAddress, amount, 
   const txJSON_Create = await prepareEscrowCreate(account.xAddress, destinationAddress, amount, condition);
   const txBlob_Create = await signCreateTransaction(txJSON_Create, account.secret);
   await submitTransaction(txBlob_Create);
+  
+  /* var loopcnt = 1
+  while (store.getState().escrow_create.txnResult.resultCode !== 'tesSUCCESS' && loopcnt < 10 )  {
+    const txJSON_Create = await prepareEscrowCreate(account.xAddress, destinationAddress, amount, condition);
+    const txBlob_Create = await signCreateTransaction(txJSON_Create, account.secret);
+    await submitTransaction(txBlob_Create);
+    await sleep(500);
+    loopcnt++
+  } */
+  
 }

@@ -7,6 +7,9 @@ export const ADD_TRANSACTION_ERROR = 'ADD_TRANSACTION_ERROR'
 export const ADD_EF_TRANSACTION = 'ADD_EF_TRANSACTION'
 export const ADD_EF_TRANSACTION_SENT = 'ADD_EF_TRANSACTION_SENT'
 export const ADD_EF_TRANSACTION_ERROR = 'ADD_EF_TRANSACTION_ERROR'
+export const ADD_EC_TRANSACTION = 'ADD_EC_TRANSACTION'
+export const ADD_EC_TRANSACTION_SENT = 'ADD_EC_TRANSACTION_SENT'
+export const ADD_EC_TRANSACTION_ERROR = 'ADD_EC_TRANSACTION_ERROR'
 
 
 // action creators
@@ -23,7 +26,7 @@ export const addTransaction = ({account, transaction}) => async (dispatch) => {
 }
 
 
-// Handle Excrow Finish differently (store as part of the Escrow Create data)
+// Handle Escrow Finish differently (store as part of the Escrow Create data)
 export const addEscrowFinishTransaction = ({account, transaction}) => async (dispatch) => {
   dispatch({ type: ADD_EF_TRANSACTION_SENT })
   try {
@@ -33,5 +36,19 @@ export const addEscrowFinishTransaction = ({account, transaction}) => async (dis
     console.log('New Escrow Finish transaction added successfully')
   } catch (error) {
     dispatch({ type: ADD_EF_TRANSACTION_ERROR, payload: 'Something went wrong adding the new Escrow Finish transaction:', error })
+  }
+}
+
+
+// Handle Escrow Cancel differently (store as part of the Escrow Create data)
+export const addEscrowCancelTransaction = ({account, transaction}) => async (dispatch) => {
+  dispatch({ type: ADD_EC_TRANSACTION_SENT })
+  try {
+    console.log('Adding Escrow Cancel transaction for account', account)
+    dispatch({ type: ADD_EC_TRANSACTION, payload: { transactionDetails: transaction }})
+
+    console.log('New Escrow Cancel transaction added successfully')
+  } catch (error) {
+    dispatch({ type: ADD_EC_TRANSACTION_ERROR, payload: 'Something went wrong adding the new Escrow Cancel transaction:', error })
   }
 }

@@ -4,7 +4,10 @@ import {
   ADD_TRANSACTION_ERROR,
   ADD_EF_TRANSACTION,
   ADD_EF_TRANSACTION_SENT, 
-  ADD_EF_TRANSACTION_ERROR, 
+  ADD_EF_TRANSACTION_ERROR,
+  ADD_EC_TRANSACTION,
+  ADD_EC_TRANSACTION_SENT, 
+  ADD_EC_TRANSACTION_ERROR, 
  } from './HistoricTransactionActions';
 
  const INITIAL_STATE = {
@@ -34,6 +37,17 @@ const HistoricTransactionReducer = (state = INITIAL_STATE, action) => {
     case ADD_EF_TRANSACTION_SENT:
       return merge(state, { histErrorMessage: '', isProcessing: true })
     case ADD_EF_TRANSACTION_ERROR:
+      return merge(state, { histErrorMessage: action.payload, isProcessing: false })
+    case ADD_EC_TRANSACTION:
+      return merge(state, { transactionList: state.transactionList.map(transaction => 
+        { if (transaction.transactionDetails.TransactionType === 'EscrowCreate' && transaction.transactionDetails.Sequence === action.payload.transactionDetails.OfferSequence) {
+          return merge(transaction, { FinishDetails: action.payload.transactionDetails })  
+        } else
+          return transaction
+        }), histErrorMessage: '', isProcessing: false })
+    case ADD_EC_TRANSACTION_SENT:
+      return merge(state, { histErrorMessage: '', isProcessing: true })
+    case ADD_EC_TRANSACTION_ERROR:
       return merge(state, { histErrorMessage: action.payload, isProcessing: false })
     default:
       return state;

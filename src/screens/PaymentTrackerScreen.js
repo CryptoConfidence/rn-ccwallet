@@ -2,8 +2,10 @@ import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
 import { connect } from 'react-redux';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { removeTxn as removeEscrowCreateTxn } from '../redux/EscrowCreateActions';
+import { removeTxn as removeEscrowFinishTxn } from '../redux/EscrowFinishActions';
 
-const PaymentTrackerScreen = ({ navigation, escrow_create, escrow_finish }) => {
+const PaymentTrackerScreen = ({ navigation, escrow_create, escrow_finish, removeEscrowCreateTxn, removeEscrowFinishTxn }) => {
   return (
     <View style={styles.container}>
       <View style={styles.main}>
@@ -55,9 +57,24 @@ const PaymentTrackerScreen = ({ navigation, escrow_create, escrow_finish }) => {
         </View>
       </View>
 
-      <Button style={styles.button} title='DONE' onPress={() => {
-        navigation.navigate('Barcode')
-      }} /> 
+      <View style={styles.footer}>
+        { escrow_create.txnResult !== null && escrow_create.txnResult.resultCode === 'tecNO_PERMISSION'  ?
+          <View style={styles.error_container}>
+            <Text style={styles.error}> Unable to submit escrow_create to XRPL  </Text> 
+            <Text style={styles.error}> Error: {escrow_create.txnResult.resultCode} </Text>
+          </View>
+          :
+          null
+        }
+
+        <Button style={styles.button} title='DONE' onPress={() => {
+          removeEscrowCreateTxn()
+          removeEscrowFinishTxn()
+          navigation.navigate('Barcode')
+        }}
+        />
+      </View>    
+       
     </View>
   )
 }
@@ -96,7 +113,19 @@ const styles = StyleSheet.create({
     color: 'red'
   },
   button: {
-    paddingBottom: 5
+
+  },
+  error_container: {
+    paddingBottom: 3
+  },
+  error: {
+    paddingHorizontal: 10,
+    color: 'red',
+    fontSize: 12,
+    fontWeight: '700'
+  },
+  footer: {
+    paddingBottom: 2
   }
 })
 
@@ -107,4 +136,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps)(PaymentTrackerScreen);
+export default connect(mapStateToProps, {removeEscrowCreateTxn, removeEscrowFinishTxn})(PaymentTrackerScreen);

@@ -5,14 +5,17 @@ export const ADD_EC_TXN_PREPARE = 'ADD_EC_TXN_PREPARE'
 export const ADD_EC_TXN_SIGN = 'ADD_EC_TXN_SIGN'
 export const ADD_EC_TXN_RESULT = 'ADD_EC_TXN_RESULT'
 export const ADD_EC_TXN_VALIDATE = 'ADD_EC_TXN_VALIDATE'
+export const REMOVE_TXN = 'REMOVE_TXN'
 export const ADD_EC_TXN_PREPARE_SENT = 'ADD_EC_TXN_PREPARE_SENT'
 export const ADD_EC_TXN_SIGN_SENT = 'ADD_EC_TXN_SIGN_SENT'
 export const ADD_EC_TXN_RESULT_SENT = 'ADD_EC_TXN_RESULT_SENT'
 export const ADD_EC_TXN_VALIDATE_SENT = 'ADD_EC_TXN_VALIDATE_SENT'
+export const REMOVE_TXN_SENT = 'REMOVE_TXN_SENT'
 export const ADD_EC_TXN_PREPARE_ERROR = 'ADD_EC_TXN_PREPARE_ERROR'
 export const ADD_EC_TXN_SIGN_ERROR = 'ADD_EC_TXN_SIGN_ERROR'
 export const ADD_EC_TXN_RESULT_ERROR = 'ADD_EC_TXN_RESULT_ERROR'
 export const ADD_EC_TXN_VALIDATE_ERROR = 'ADD_EC_TXN_VALIDATE_ERROR'
+export const REMOVE_TXN_ERROR = 'REMOVE_TXN_ERROR'
 
 // action creators
 export const setPreparedTxn = (preparedTxn) => async (dispatch) => {
@@ -59,3 +62,14 @@ export const setTxnValidation = (txnValidation) => async (dispatch) => {
     dispatch({ type: ADD_EC_TXN_VALIDATE_ERROR, payload: 'Something went wrong adding txn validation to store:', error })
   }
 }
+
+export const removeTxn = () => async (dispatch) => {
+  dispatch({ type: REMOVE_TXN_SENT })
+  try {
+    console.log('Action removeTxn')
+    dispatch({ type: REMOVE_TXN })
+    console.log('Removed Live transaction data successfully')
+  } catch (error) {
+    dispatch({ type: REMOVE_TXN_ERROR, payload: 'Something went wrong removing transaction from store:', error })
+  }
+} 

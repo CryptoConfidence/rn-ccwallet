@@ -8,8 +8,8 @@ const AuthForm = ({ errorMessage, onSubmit, submitButtonText }) => {
 
   return (
     <>
-      <Input label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" auto={false}/>
-      <Input label="Password" value={password} onChangeText={setPassword} autoCapitalize="none" auto={false} secureTextEntry={true}/>
+      <Input label="Email" value={email} onChangeText={setEmail} autoCapitalize="none" autoCorrect={false} auto={false}/>
+      <Input label="Password" value={password} onChangeText={setPassword} autoCapitalize="none" autoCorrect={false} auto={false} secureTextEntry={true}/>
       { errorMessage ? <Text style={styles.errorMessage} >{errorMessage}</Text> : null }
       <Button title={submitButtonText} onPress={() => onSubmit({ email, password })}/>
     </>

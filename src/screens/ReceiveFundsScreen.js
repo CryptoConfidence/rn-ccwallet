@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
-import { Dropdown } from 'react-native-material-dropdown-v2';
+//import { Dropdown } from 'react-native-material-dropdown-v2';
+import RNPickerSelect from 'react-native-picker-select';
 import { connect } from 'react-redux';
 import QRCode from 'react-native-qrcode-generator';
 
@@ -12,7 +13,8 @@ const ReceiveFundsScreen = ({ accounts }) => {
     if (account) {
       return { 
         value: account.xAddress,
-        label: account.name   
+        label: account.name, 
+        key: account.name  
       }
       } else {
         return null
@@ -29,16 +31,17 @@ const ReceiveFundsScreen = ({ accounts }) => {
     <View style={styles.container}>
       
       <View style={styles.dropdown_container}>
-        <Dropdown
-          style={styles.dropdown}
-          label='Select Account'
-          fontSize={12}
-          labelFontSize={10}
-          animationDuration={50}
-          data={accountNames}
-          onChangeText={(text) => {mapAddressToAccount(text)}}
-        />
-      </View>
+          <RNPickerSelect
+            style={styles.dropdown}
+            //label='Select Account'
+            //fontSize={12}
+            //labelFontSize={10}
+            //animationDuration={50}
+            placeholder={{ label: 'Select an Account...' }}
+            items={accountNames}
+            onValueChange={(text) => {mapAddressToAccount(text)}}
+          />
+        </View>
 
       <View style={styles.qrcode_wrapper}>
         <QRCode

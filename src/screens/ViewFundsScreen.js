@@ -14,9 +14,8 @@ const ViewFundsScreen = ({ navigation, accounts, transactions }) => {
   const [activeAccount, setActiveAccount] = useState(accounts[0]);
 
   const transactionCompare = (a, b) => {
-    if (a.transactionDetails.Sequence > b.transactionDetails.Sequence) return 1;
-    if (b.transactionDetails.Sequence > a.transactionDetails.Sequence) return -1;
-    return 0; 
+    return b.transactionDetails.inLedger - a.transactionDetails.inLedger;
+    //return a.transactionDetails.inLedger - b.transactionDetails.inLedger; 
   }
 
   const filterTransactionsByAccount = (transaction) => {
@@ -28,7 +27,7 @@ const ViewFundsScreen = ({ navigation, accounts, transactions }) => {
   }
   
   const getTransactions = () => {
-    return transactions.filter(transaction => filterTransactionsByAccount(transaction))
+    return transactions.sort(transactionCompare).filter(transaction => filterTransactionsByAccount(transaction))
   }
 
   const renderPaymentStatus = (item) => {
@@ -44,9 +43,9 @@ const ViewFundsScreen = ({ navigation, accounts, transactions }) => {
     }  
   }
 
-  useEffect(() => {
+  /* useEffect(() => {
     transactions.sort(transactionCompare)
-  }, [])
+  }, []) */
 
   return (
     <View style={styles.container}>

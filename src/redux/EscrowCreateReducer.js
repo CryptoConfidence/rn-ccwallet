@@ -3,14 +3,17 @@ import {
   ADD_EC_TXN_SIGN,
   ADD_EC_TXN_RESULT,
   ADD_EC_TXN_VALIDATE,
+  REMOVE_TXN,
   ADD_EC_TXN_PREPARE_SENT, 
   ADD_EC_TXN_SIGN_SENT,
   ADD_EC_TXN_RESULT_SENT,
   ADD_EC_TXN_VALIDATE_SENT,
+  REMOVE_TXN_SENT,
   ADD_EC_TXN_PREPARE_ERROR,
   ADD_EC_TXN_SIGN_ERROR,
   ADD_EC_TXN_RESULT_ERROR,
-  ADD_EC_TXN_VALIDATE_ERROR 
+  ADD_EC_TXN_VALIDATE_ERROR,
+  REMOVE_TXN_ERROR 
 } from './EscrowCreateActions';
 
 const INITIAL_STATE = {
@@ -22,7 +25,8 @@ const INITIAL_STATE = {
   prepareErrorMessage: '',
   signErrorMessage: '',
   resultErrorMessage: '',
-  validationErrorMessage: ''
+  validationErrorMessage: '',
+  removalErrorMessage: ''
 }
 
 const merge = (prev, next) => Object.assign({}, prev, next)
@@ -38,6 +42,8 @@ const EscrowCreateReducer = (state = INITIAL_STATE, action) => {
       return merge(state, {txnResult: action.payload, resultErrorMessage: '', isProcessing: false })
     case ADD_EC_TXN_VALIDATE:
       return merge(state, {txnValidation: action.payload, validationErrorMessage: '', isProcessing: false })
+    case REMOVE_TXN:
+      return merge(state, {txnPrepared: "", txnSigned: "", txnResult: "", txnValidation: "", removalErrorMessage: '', isProcessing: false })
     case ADD_EC_TXN_PREPARE_SENT:
       return merge(state, { prepareErrorMessage: '', isProcessing: true })
     case ADD_EC_TXN_SIGN_SENT:
@@ -46,6 +52,8 @@ const EscrowCreateReducer = (state = INITIAL_STATE, action) => {
       return merge(state, { resultErrorMessage: '', isProcessing: true })
     case ADD_EC_TXN_VALIDATE_SENT:
       return merge(state, { validationErrorMessage: '', isProcessing: true })
+    case REMOVE_TXN_SENT:
+      return merge(state, { removalErrorMessage: '', isProcessing: true })
     case ADD_EC_TXN_PREPARE_ERROR:
       return merge(state, { prepareErrorMessage: action.payload, isProcessing: false })
     case ADD_EC_TXN_SIGN_ERROR:
@@ -54,6 +62,8 @@ const EscrowCreateReducer = (state = INITIAL_STATE, action) => {
       return merge(state, { resultErrorMessage: action.payload, isProcessing: false })
     case ADD_EC_TXN_VALIDATE_ERROR:
       return merge(state, { validationErrorMessage: action.payload, isProcessing: false })
+    case REMOVE_TXN_ERROR:
+      return merge(state, { removalErrorMessage: action.payload, isProcessing: false })
     default:
       return state;
   }

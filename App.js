@@ -101,7 +101,7 @@ export default () => {
     console.log('Connecting to XRPL WebSocket');
     websocketConnect()
     console.log('Connecting to XRP Price Websocket')
-    //xrpPriceFeedConnect()
+    xrpPriceFeedConnect()
   }, [])
 
   return (
